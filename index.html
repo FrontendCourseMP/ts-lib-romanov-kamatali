@@ -1,20 +1,57 @@
 <!doctype html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ts-val</title>
-  </head>
-  <body>
-    <main>
-      <section>
-        <form novalidate>
-          <label>Имя <input type="text" required></label>
-          <p role="alert" aria-live="assertive"></p>
-          <button type="submit">Отправить</button>
-        </form>
-      </section>
-    </main>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ts form validation</title>
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+
+<body>
+
+  <header>
+    <img src="/src/typescript.svg" alt="логотип">
+    <h1>Демо валидация форм с помощью библиотеки "FormCheck"</h1>
+  </header>
+
+  <main>
+    <section>
+      <!-- Добавила поля формы для почты и телефона, заменила  aria-live="assertive" на aria-live="polite" -->
+      <form novalidate>
+        <div class="form-group">
+          <label>
+            Имя*:
+            <input type="text" required id="name" name="name">
+          </label>
+          <p class="error" role="alert" aria-live="polite" data-for="name"></p>
+        </div>
+
+        <div class="form-group">
+          <label>
+            Email*:
+            <input type="email" required id="email" name="email">
+          </label>
+          <p class="error" role="alert" aria-live="polite" data-for="email"></p>
+        </div>
+        
+        <div class="form-group">
+          <label>
+            Телефон*:
+            <input type="tel" id="phone" name="phone">
+          </label>
+          <p class="error" role="alert" aria-live="polite" data-for="phone"></p>
+        </div>
+
+        <button type="submit">Отправить</button>
+      </form>
+
+    </section>
+  </main>
+  <footer>
+    Каматали Алина, Романов Александр, 241-321
+  </footer>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>
