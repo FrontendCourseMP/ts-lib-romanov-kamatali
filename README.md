@@ -17,7 +17,16 @@ pnpm add formcheck
 import * as f from "formcheck"
 ```
 
+## Дополнительно
+
+Для корректной работы файла tsconfig.json, используйте команду 
+
+```bash
+npm install --save-dev vite
+```
+
 Проект выполнен командой ts-lib-romanov-kamatali
 Katsero - Романов Александр Дмитриевич
 AlinaK-code - Каматали Алина Аароновна
+
 
