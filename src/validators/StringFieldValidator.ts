@@ -8,7 +8,7 @@ interface StringValidationRule {
 
 export class StringFieldValidatorImpl implements StringFieldValidator {
   private rules: StringValidationRule[] = [];
-  private fieldName: string;
+  public fieldName: string;
 
   constructor(fieldName: string) {
     this.fieldName = fieldName;
@@ -56,7 +56,7 @@ export class StringFieldValidatorImpl implements StringFieldValidator {
   }
 
   // Метод для фактической валидации (будет вызываться позже из FormValidator)
-  validate(value: unknown): { valid: boolean; error?: string } {
+  validate(value:string ): { valid: boolean; error?: string } {
     // Сначала приведём к строке или обработаем null/undefined
     if (value == null) {
       value = '';
