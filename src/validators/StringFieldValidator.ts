@@ -1,6 +1,6 @@
 import type { StringFieldValidator } from '../types/validators/StringFieldValidator';
 
-// проверка типизации
+// типизация записи правил
 interface StringValidationRule {
   check: (value: string) => boolean;
   message: string;
@@ -8,20 +8,15 @@ interface StringValidationRule {
 
 export class StringFieldValidatorImpl implements StringFieldValidator {
   private rules: StringValidationRule[] = [];
-  public fieldName: string;
+
+  // будет использоваться позже
+  private fieldName: string;
 
   constructor(fieldName: string) {
     this.fieldName = fieldName;
   }
 
-  required(message = 'Поле обязательно для заполнения'): this {
-    this.rules.push({
-      check: (value) => value != null && value.trim() !== '',
-      message,
-    });
-    return this;
-  }
-
+//   методы
   min(len: number, message = `Длина должна быть не менее ${len} символов`): this {
     this.rules.push({
       check: (value) => value.length >= len,
@@ -47,6 +42,14 @@ export class StringFieldValidatorImpl implements StringFieldValidator {
     return this;
   }
 
+  required(message = 'Поле обязательно для заполнения'): this {
+    this.rules.push({
+      check: (value) => value != null && value.trim() !== '',
+      message,
+    });
+    return this;
+  }
+
   pattern(regex: RegExp, message = 'Значение не соответствует шаблону'): this {
     this.rules.push({
       check: (value) => regex.test(value),
@@ -55,20 +58,24 @@ export class StringFieldValidatorImpl implements StringFieldValidator {
     return this;
   }
 
-  // Метод для фактической валидации (будет вызываться позже из FormValidator)
-  validate(value:string ): { valid: boolean; error?: string } {
-    // Сначала приведём к строке или обработаем null/undefined
+  validate(value: unknown): { valid: boolean; error?: string } {
+    let stringValue: string;
+
+    // проверка введённого пользователем значения на строковость
     if (value == null) {
-      value = '';
-    } else if (typeof value !== 'string') {
-      value = String(value);
+      stringValue = '';
+    } else if (typeof value === 'string') {
+      stringValue = value;
+    } else {
+      stringValue = String(value);
     }
 
     for (const rule of this.rules) {
-      if (!rule.check(value)) {
+      if (!rule.check(stringValue)) {
         return { valid: false, error: rule.message };
       }
     }
+
     return { valid: true };
   }
 }
