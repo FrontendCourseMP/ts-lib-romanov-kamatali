@@ -19,7 +19,7 @@ export class NumberFieldValidatorImpl implements NumberFieldValidator {
   //   методы
   min(
     val: number,
-    message = `Длина должна быть не менее ${val} символов`
+    message = `Число должно быть не менее ${val}`
   ): this {
     this.rules.push({
       check: (value) => value >= val,
@@ -29,25 +29,28 @@ export class NumberFieldValidatorImpl implements NumberFieldValidator {
   }
 
   max(
-    len: number,
-    message = `Длина должна быть не более ${len} символов`
+    val: number,
+    message = `Число должно быть не более ${val}`
   ): this {
     this.rules.push({
-      check: (value) => value.length <= len,
+      check: (value) => value <= val,
       message,
     });
     return this;
   }
 
-  email(message = 'Некорректный адрес электронной почты'): this {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  integer(
+    message = 'Требуется целое число'
+  ): this {
     this.rules.push({
-      check: (value) => emailRegex.test(value),
+      check: (value) => Number.isInteger(value),
       message,
     });
     return this;
   }
 
+  // TODO сообщение + логика
   required(message = 'Поле обязательно для заполнения'): this {
     this.rules.push({
       check: (value) => value != null && value.trim() !== '',
@@ -56,32 +59,14 @@ export class NumberFieldValidatorImpl implements NumberFieldValidator {
     return this;
   }
 
-  pattern(regex: RegExp, message = 'Значение не соответствует шаблону'): this {
-    this.rules.push({
-      check: (value) => regex.test(value),
-      message,
-    });
-    return this;
+// TODO ввод - число, проверка
+  for(const rule of this.rules) {
+    if (!rule.check(stringValue)) {
+      return { valid: false, error: rule.message };
+    }
   }
-
-  validate(value: unknown): { valid: boolean; error?: string } {
-    let stringValue: string;
-
-    // проверка введённого пользователем значения на строковость
-    if (value == null) {
-      stringValue = '';
-    } else if (typeof value === 'string') {
-      stringValue = value;
-    } else {
-      stringValue = String(value);
-    }
-
-    for (const rule of this.rules) {
-      if (!rule.check(stringValue)) {
-        return { valid: false, error: rule.message };
-      }
-    }
 
     return { valid: true };
   }
 }
+
