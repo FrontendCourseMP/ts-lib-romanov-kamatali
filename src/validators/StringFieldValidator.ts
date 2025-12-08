@@ -9,7 +9,6 @@ interface StringValidationRule {
 export class StringFieldValidatorImpl implements StringFieldValidator {
   private rules: StringValidationRule[] = [];
 
-  // будет использоваться позже
   private fieldName: string;
 
   constructor(fieldName: string) {

@@ -45,12 +45,17 @@ export class FormValidatorImpl implements FormValidator {
     let isValid = true;
 
     for (const [fieldName, validator] of this.fieldValidators) {
+      // Находим элемент по имени поля
       const input = this.formElement.querySelector(`[name="${fieldName}"]`) as
         | HTMLInputElement
         | HTMLTextAreaElement
         | HTMLSelectElement
         | null;
-      const value = input ? (input as any).value : undefined;
+
+      // Получаем значение (если элемент найден)
+      const value = input ? input.value : undefined;
+
+      // Запускаем валидацию
       const result = validator.validate(value);
 
       if (!result.valid) {

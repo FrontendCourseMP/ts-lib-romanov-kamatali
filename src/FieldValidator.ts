@@ -26,5 +26,3 @@ export class FieldValidatorImpl implements FieldValidator {
     return new ArrayFieldValidatorImpl(this.fieldName);
   }
 }
-
-// TODO ошибки типизации т.к. /validators не доработаны

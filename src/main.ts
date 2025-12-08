@@ -1,5 +1,3 @@
-// src/main.ts
-
 import { FormValidatorImpl } from "./FormValidator";
 
 export function createFormValidator(

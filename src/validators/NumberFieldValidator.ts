@@ -1,6 +1,5 @@
-import type { NumberFieldValidator } from '../types/validators/NumberFieldValidator';
+import type { NumberFieldValidator } from "../types/validators/NumberFieldValidator";
 
-// типизация записи правил
 interface NumberValidationRule {
   check: (value: number) => boolean;
   message: string;
@@ -8,19 +7,13 @@ interface NumberValidationRule {
 
 export class NumberFieldValidatorImpl implements NumberFieldValidator {
   private rules: NumberValidationRule[] = [];
-
-  // будет использоваться позже
   private fieldName: string;
 
   constructor(fieldName: string) {
     this.fieldName = fieldName;
   }
 
-  //   методы
-  min(
-    val: number,
-    message = `Число должно быть не менее ${val}`
-  ): this {
+  min(val: number, message = `Число должно быть не менее ${val}`): this {
     this.rules.push({
       check: (value) => value >= val,
       message,
@@ -28,10 +21,7 @@ export class NumberFieldValidatorImpl implements NumberFieldValidator {
     return this;
   }
 
-  max(
-    val: number,
-    message = `Число должно быть не более ${val}`
-  ): this {
+  max(val: number, message = `Число должно быть не более ${val}`): this {
     this.rules.push({
       check: (value) => value <= val,
       message,
@@ -39,10 +29,7 @@ export class NumberFieldValidatorImpl implements NumberFieldValidator {
     return this;
   }
 
-
-  integer(
-    message = 'Требуется целое число'
-  ): this {
+  integer(message = "Требуется целое число"): this {
     this.rules.push({
       check: (value) => Number.isInteger(value),
       message,
@@ -50,23 +37,36 @@ export class NumberFieldValidatorImpl implements NumberFieldValidator {
     return this;
   }
 
-  // TODO сообщение + логика
-  required(message = 'Поле обязательно для заполнения'): this {
+  required(
+    message = `Поле "${this.fieldName}" обязательно для заполнения`
+  ): this {
     this.rules.push({
-      check: (value) => value != null && value.trim() !== '',
+      check: (value) => typeof value === "number" && !isNaN(value),
       message,
     });
     return this;
   }
 
-// TODO ввод - число, проверка
-  for(const rule of this.rules) {
-    if (!rule.check(stringValue)) {
-      return { valid: false, error: rule.message };
+  validate(value: unknown): { valid: boolean; error?: string } {
+    let numValue: number;
+
+    if (value === null) {
+      numValue = NaN;
+    } else if (typeof value === "number") {
+      numValue = value;
+    } else if (typeof value === "string") {
+      const parsed = parseFloat(value);
+      numValue = isNaN(parsed) ? NaN : parsed;
+    } else {
+      numValue = NaN;
     }
-  }
+
+    for (const rule of this.rules) {
+      if (!rule.check(numValue)) {
+        return { valid: false, error: rule.message };
+      }
+    }
 
     return { valid: true };
   }
 }
-
