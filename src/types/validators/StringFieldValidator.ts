@@ -5,4 +5,5 @@ export interface StringFieldValidator {
   email: (message?: string) => StringFieldValidator;
   required: (message?: string) => StringFieldValidator;
   pattern: (regex: RegExp, message?: string) => StringFieldValidator;
+  validate: (value: unknown) => { valid: boolean; error?: string };
 }
