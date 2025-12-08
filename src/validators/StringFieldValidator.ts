@@ -48,7 +48,9 @@ export class StringFieldValidatorImpl implements StringFieldValidator {
     return this;
   }
 
-  required(message = "Поле обязательно для заполнения"): this {
+  required(
+    message = `Поле "${this.fieldName}" обязательно для заполнения`
+  ): this {
     this.rules.push({
       check: (value) => value !== null && value.trim() !== "",
       message,
