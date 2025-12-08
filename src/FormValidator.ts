@@ -14,6 +14,8 @@ export class FormValidatorImpl implements FormValidator {
   private fieldValidators = new Map<string, AnyValidator>();
   private _errors: Record<string, string> = {};
 
+  constructor(private formElement: HTMLFormElement) {}
+
   Field(name: string): FieldValidatorImpl {
     const original = new FieldValidatorImpl(name);
 
@@ -43,10 +45,12 @@ export class FormValidatorImpl implements FormValidator {
     let isValid = true;
 
     for (const [fieldName, validator] of this.fieldValidators) {
-      const input = document.querySelector(
-        `[name="${fieldName}"]`
-      ) as HTMLInputElement | null;
-      const value = input ? input.value : undefined;
+      const input = this.formElement.querySelector(`[name="${fieldName}"]`) as
+        | HTMLInputElement
+        | HTMLTextAreaElement
+        | HTMLSelectElement
+        | null;
+      const value = input ? (input as any).value : undefined;
       const result = validator.validate(value);
 
       if (!result.valid) {
@@ -70,5 +74,3 @@ export class FormValidatorImpl implements FormValidator {
     this._errors = {};
   }
 }
-
-// TODO ошибки типизации т.к. /validators не доработаны
