@@ -1,5 +1,13 @@
 {
   "devDependencies": {
-    "vite": "^7.2.6"
+    "@vitest/coverage-v8": "^4.0.15",
+    "vite": "^7.2.7",
+    "vitest": "^4.0.15"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   }
 }
+
