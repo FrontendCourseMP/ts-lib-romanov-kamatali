@@ -47,6 +47,15 @@ export class StringFieldValidatorImpl implements StringFieldValidator {
     return this;
   }
 
+    phone(message = "Некорректный формат телефона"): this {
+    const phoneRegex = /^[\+]?[78][\d\s\-\(\)]{10,15}$/;
+    this.rules.push({
+      check: (value) => phoneRegex.test(value),
+      message,
+    });
+    return this;
+  }
+
   required(
     message = `Поле "${this.fieldName}" обязательно для заполнения`
   ): this {
