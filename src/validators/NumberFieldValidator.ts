@@ -55,12 +55,22 @@ export class NumberFieldValidatorImpl implements NumberFieldValidator {
     } else if (typeof value === "number") {
       numValue = value;
     } else if (typeof value === "string") {
-      const parsed = parseFloat(value);
-      numValue = isNaN(parsed) ? NaN : parsed;
+      const trimmed = value.trim();
+      if (trimmed === "") {
+        numValue = NaN;
+      } else {
+        const num = Number(trimmed); // сделала явную проверку на число + учет пробелов, чтобы не вышло что ситуация "42abc" возвращает истину. 
+        numValue = isNaN(num) ? NaN : num;
+      }
     } else {
-      numValue = NaN;
+      numValue = NaN; // при непонятной строке возвращаем NaN
     }
 
+    if (isNaN(numValue)) { // переделала логику, теперь если уж получили NaN, выведем новую ошибку: (до этого выводилось "поле не заполнено") -> теперь .required() в тестах не нужен по идее?
+      return { valid: false, error: "Пожалуйста, введите число!" };
+    }
+
+      // только если значение — валидное число, применяем правила
     for (const rule of this.rules) {
       if (!rule.check(numValue)) {
         return { valid: false, error: rule.message };
