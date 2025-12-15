@@ -46,12 +46,12 @@ export class ArrayFieldValidatorImpl implements ArrayFieldValidator {
   }
 
   validate(value: unknown): { valid: boolean; error?: string } {
-    // если значение не null и не массив — ошибка типа
-    if (value !== null && !Array.isArray(value)) {
+    // если значение не null, не undefined и не массив — ошибка типа
+    if (value != null && !Array.isArray(value)) {
       return { valid: false, error: "Ожидался массив" };
     }
 
-    const arrayValue = value === null ? [] : value;
+    const arrayValue = Array.isArray(value) ? value : [];
 
     for (const rule of this.rules) {
       if (!rule.check(arrayValue)) {
